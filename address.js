@@ -29,14 +29,6 @@ EG (Egypt) is formatted: cit then zip is on a different line.  Format should be 
 SV (El Salvador) is formatted: zip-cit then sta is on a different line.  Format should be zip-cit, sta
 */
 
-let addressFormats = {
-    format1: ['AL', 'DE', 'DZ', 'AR', 'AT', 'BE', 'BG', 'HR', 'IS', 'DK', 'FR'],
-    format2: ['AU', 'US', 'CA'],
-    format3: ['UK'],
-    format4: ['CN', 'NZ'],
-    format5: ['BO']
-};
-
 function escapeRegExp(strToEscape) {
     // Escape special characters for use in a regular expression
     return strToEscape.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -89,23 +81,23 @@ function test(address) {
         return(format);
     }
 
-    if(addressFormats.format1.indexOf(address.con)>=0) {
+    if(['AL', 'DE', 'DZ', 'AR', 'AT', 'BE', 'BG', 'HR', 'IS', 'DK', 'FR'].indexOf(address.con)>=0) {
         let format = address.zip + ' ' + address.cit;
         return(format.trim());
     }
-    if(addressFormats.format2.indexOf(address.con)>=0) {
+    if(['AU', 'US', 'CA'].indexOf(address.con)>=0) {
         let format = address.cit + ' ' + address.sta + ' ' + address.zip;
         return(format.trim());
     }
-    if(addressFormats.format3.indexOf(address.con)>=0) {
+    if(['UK'].indexOf(address.con)>=0) {
         let format = address.cit + ' ' + address.cot + ' ' + address.zip;
         return(format.trim());
     }
-    if(addressFormats.format4.indexOf(address.con)>=0) {
+    if(['CN', 'NZ'].indexOf(address.con)>=0) {
         let format = address.cit + ' ' + address.zip;
         return(format.trim());
     }
-    if(addressFormats.format5.indexOf(address.con)>=0) {
+    if(['BO'].indexOf(address.con)>=0) {
         let format = address.cit;
         return(format.trim());
     }    
