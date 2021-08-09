@@ -4,7 +4,7 @@
 
 // Format 2
 // cit + sta/province + zip/postal code
-// AU (Australia), US (United stas), BA (Brazil), DO (Dominican Republic), 
+// AU (Australia), US (United stas), BR (Brazil), DO (Dominican Republic), 
 
 // Format 3
 // cit + county + zip/postal code
@@ -23,84 +23,55 @@
 /* 
 Important Notes:
 AM (Armenia) has the zip, cit, and sta on different lines.  Should separate each by a comma.
-BA (Brazil) is formatted: cit-sta then zip is on a separate line.  Format shoudl be cit-sta, zip.
+BR (Brazil) is formatted: cit-sta then zip is on a separate line.  Format shoudl be cit-sta, zip.
 DO (Dominican Republic) is formatted: cit, sta then has the zip on a separate line.  Format should be cit, sta, zip.
 EG (Egypt) is formatted: cit then zip is on a different line.  Format should be cit, zip
 SV (El Salvador) is formatted: zip-cit then sta is on a different line.  Format should be zip-cit, sta
 */
 
-function escapeRegExp(strToEscape) {
-    // Escape special characters for use in a regular expression
-    return strToEscape.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-};
-
-function trimChar(origString, charToTrim) {
-    charToTrim = escapeRegExp(charToTrim);
-    var regEx = new RegExp("^[" + charToTrim + "]+|[" + charToTrim + "]+$", "g");
-    return origString.replace(regEx, "");
-}
 
 function test(address) {
-    for(const component in address) {
-        if (typeof(address[component]) === "undefined") {
-            address[component] = "";
-        }
+    copyAddress = {
+        cit: address.cit ? address.cit : "",
+        sta: address.sta ? address.sta : "",
+        con: address.con,
+        cot: address.cot ? address.cot : "",
+        zip: address.zip ? address.zip : "",
     }
 
     if(address.con === "AM") {
-        let format = address.zip + ', ' + address.cit + ', ' + address.sta;
-        format = trimChar(format, ", ");
-        return(format);
+        return((copyAddress.zip + (address.zip&&address.cit ? ", " : "") + copyAddress.cit + (address.cit&&address.sta ? ", " : "") + copyAddress.sta).trim());
     }
 
-    if(address.con === "BA") {
-        let format = address.cit + '-' + address.sta + ', ' + address.zip;
-        format = trimChar(format, ", ");
-        format = trimChar(format, "-");
-        format = format.replace("-,", ",");
-        return(format);
+    if(address.con === "BR") {
+        return((copyAddress.cit + (address.cit&&address.sta ? "-" : "") + copyAddress.sta + (address.sta&&address.zip ? ", " : "") + copyAddress.zip).trim());
     }
 
     if(address.con === "DO") {
-        let format = address.cit + ', ' + address.sta + ', ' + address.zip;
-        format = trimChar(format, ", ");
-        return(format);
+        return((copyAddress.cit + (address.cit&&address.sta ? ", " : "") + copyAddress.sta + (address.sta&&address.zip ? ", " : "") + copyAddress.zip).trim());
     }
 
     if(address.con === "EG") {
-        let format = address.cit + ', ' + address.zip;
-        format = trimChar(format, ", ");
-        return(format);
+        return((copyAddress.cit + (address.cit&&address.zip ? ", " : "") + copyAddress.zip).trim());
     }
 
     if(address.con === "SV") {
-        let format = address.zip + '-' + address.cit + ', ' + address.sta;
-        format = trimChar(format, ", ");
-        format = trimChar(format, "-");
-        format = format.replace("-,", ",");
-        return(format);
+        return((copyAddress.zip + (address.zip&&address.cit ? "-" : "") + copyAddress.cit + (address.cit&&address.sta ? ", " : "") + copyAddress.sta).trim());
     }
 
     if(['AL', 'DE', 'DZ', 'AR', 'AT', 'BE', 'BG', 'HR', 'IS', 'DK', 'FR'].indexOf(address.con)>=0) {
-        let format = address.zip + ' ' + address.cit;
-        return(format.trim());
+        return((copyAddress.zip + ' ' + copyAddress.cit).trim());
     }
     if(['AU', 'US', 'CA'].indexOf(address.con)>=0) {
-        let format = address.cit + ' ' + address.sta + ' ' + address.zip;
-        return(format.trim());
+        return((copyAddress.cit + ' ' + copyAddress.sta + ' ' + copyAddress.zip).trim());
     }
     if(['UK'].indexOf(address.con)>=0) {
-        let format = address.cit + ' ' + address.cot + ' ' + address.zip;
-        return(format.trim());
+        return((copyAddress.cit + ' ' + copyAddress.cot + ' ' + copyAddress.zip).trim());
     }
     if(['CN', 'NZ'].indexOf(address.con)>=0) {
-        let format = address.cit + ' ' + address.zip;
-        return(format.trim());
+        return((copyAddress.cit + ' ' + copyAddress.zip).trim());
     }
     if(['BO'].indexOf(address.con)>=0) {
-        let format = address.cit;
-        return(format.trim());
+        return(copyAddress.cit);
     }    
 }
-
-
